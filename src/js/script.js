@@ -281,11 +281,11 @@
 
     getElement(element) {
       const thisCart = this;
-      // thisCart.element = element;
       thisCart.dom = {}; //zawiera referencję el.DOM (czemu to służy?)
       thisCart.dom.wrapper = element;
       thisCart.dom.toggleTrigger = element.querySelector(select.cart.toggleTrigger);
-      console.log(thisCart.dom.toggleTrigger);
+      thisCart.dom.productList = element.querySelector(select.cart.productList);
+      console.log(thisCart.dom.productList);
     }
 
     initActions() {
@@ -296,9 +296,11 @@
     }
 
     add(menuProduct) {
-      // const thisCart = this;
-
-      console.log('adding product', menuProduct);
+      const thisCart = this;
+      const generatedHtml = templates.cartProduct(menuProduct);
+      const generatedDOM = utils.createDOMFromHTML(generatedHtml);
+      thisCart.dom.productList.appendChild(generatedDOM);
+      console.log(menuProduct);
     }
   }
 
