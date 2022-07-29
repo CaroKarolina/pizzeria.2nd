@@ -88,7 +88,6 @@
   class Product {
     constructor(id, data) {
       const thisProduct = this;
-      console.log(thisProduct);
       thisProduct.id = id;
       thisProduct.data = data;      
       thisProduct.renderInMenu();
@@ -100,7 +99,6 @@
     }
     renderInMenu() {
       const generatedHtml = templates.menuProduct(this.data);
-      console.log(this.data)
       this.element = utils.createDOMFromHTML(generatedHtml);
       const menuContainer = document.querySelector(select.containerOf.menu);
       menuContainer.appendChild(this.element);
@@ -160,18 +158,16 @@
             price -= option.price;
           }
           if (optionImage) {
-            console.log(formData[paramId].includes(optionId));
             if (formData[paramId] && formData[paramId].includes(optionId)) {
-              optionImage.setAttribute('class', classNames.menuProduct.imageVisible);
-            } else {
-              console.log('cos')
+              optionImage.classList.add(classNames.menuProduct.imageVisible);
+            } 
+            if (formData[paramId] && !formData[paramId].includes(optionId)) {
               optionImage.classList.remove(classNames.menuProduct.imageVisible);
             }
           }
         }
       }
       thisProduct.priceSingle = price;
-      console.log(thisProduct.priceSingle);
       price *= thisProduct.amountWidget.value;
       thisProduct.priceElem.innerHTML = price;
     }
@@ -189,7 +185,7 @@
         name: (thisProduct.data.name),
         amount: (thisProduct.amountWidget.input.value),
         priceSingle: (thisProduct.priceSingle),
-        price: (thisProduct.priceSingle * settings.amountWidget.defaultValue),
+        price: (thisProduct.priceSingle * thisProduct.amountWidget.input.value),
         params: (thisProduct.prepareCartProductParams())
       };
       return productSummary;
@@ -222,10 +218,11 @@
   }
 
   class AmountWidget {
-    constructor(element) {
+    constructor(element, value) {
       const thisWidget = this;
       thisWidget.getElement(element);
-      thisWidget.setValue(thisWidget.input.value);
+      // thisWidget.setValue(thisWidget.input.value);
+      thisWidget.setValue(value || thisWidget.input.value);
       thisWidget.initActions();
     }
 
@@ -248,7 +245,6 @@
       }
       thisWidget.announce();
       thisWidget.input.value = thisWidget.value;
-      console.log(thisWidget.value); // ! to ma być wysyłane do koszyka <3
     }
 
     initActions() {
@@ -281,7 +277,6 @@
       thisCart.products = [];
       thisCart.getElement(element);
       thisCart.initActions();
-      console.log(thisCart);
     }
     getElement(element) {
       const thisCart = this;
@@ -296,11 +291,11 @@
     }
     initActions() {
       const thisCart = this;
-      thisCart.dom.toggleTrigger.addEventListener('click', function() {
-        thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
-      });
       thisCart.dom.productList.addEventListener('updated', function() {
         thisCart.update();
+      });
+      thisCart.dom.toggleTrigger.addEventListener('click', function() {
+        thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
       });
       thisCart.dom.productList.addEventListener('remove', function() {
         thisCart.remove(event.detail.cartProduct);
@@ -322,7 +317,6 @@
       for (let cartProduct of thisCart.products) {
         totalNumber += cartProduct.amount;
         subtotalPrice += cartProduct.price;
-        console.log(cartProduct.price);
         if (subtotalPrice != 0) {
           thisCart.totalPrice = deliveryFee + subtotalPrice;
         }
@@ -345,8 +339,6 @@
 
   class CartProduct {
     constructor(menuProduct, element) {
-      console.log(menuProduct);
-      console.log(element);
       const thisCartProduct = this;
       thisCartProduct.menuProduct = menuProduct;
       thisCartProduct.id = menuProduct.id;
@@ -358,7 +350,6 @@
       thisCartProduct.getElement(element);
       thisCartProduct.initAmountWidget();
       thisCartProduct.initActions();
-      console.log(thisCartProduct.amountWidget.value); //dlaczego przychodzi wartosć '1' ?
     }
     getElement(element) {
       const thisCartProduct = this;
@@ -371,7 +362,7 @@
     }
     initAmountWidget() {
       const thisCartProduct = this;
-      thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidget);
+      thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidget, thisCartProduct.amount);
       thisCartProduct.dom.amountWidget.addEventListener('click', function() {
         thisCartProduct.amount = thisCartProduct.amountWidget.value;
         thisCartProduct.price = thisCartProduct.amount * thisCartProduct.priceSingle;
