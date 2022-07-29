@@ -73,6 +73,11 @@
     cart: {
       defaultDeliveryFee: 20,
     },
+    db: {
+      url: '//localhost:3131',
+      products: 'products',
+      orders: 'orders',
+    },
   };
   
   const templates = {
@@ -95,13 +100,14 @@
     }
     renderInMenu() {
       const generatedHtml = templates.menuProduct(this.data);
+      console.log(this.data)
       this.element = utils.createDOMFromHTML(generatedHtml);
       const menuContainer = document.querySelector(select.containerOf.menu);
       menuContainer.appendChild(this.element);
     }
     getElement() {
       const thisProduct = this;
-      thisProduct.dom = {}; //jak to zorbic i po co ?
+      thisProduct.dom = {};
       thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
       thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
@@ -154,11 +160,12 @@
             price -= option.price;
           }
           if (optionImage) {
+            console.log(formData[paramId].includes(optionId));
             if (formData[paramId] && formData[paramId].includes(optionId)) {
               optionImage.setAttribute('class', classNames.menuProduct.imageVisible);
-            }
-            if (formData[paramId] && !formData[paramId].includes(optionId)) {
-              console.log('showMe!');
+            } else {
+              console.log('cos')
+              optionImage.classList.remove(classNames.menuProduct.imageVisible);
             }
           }
         }
@@ -224,7 +231,6 @@
 
     getElement(element) {
       const thisWidget = this;
-      console.log(thisWidget);
       thisWidget.element = element;
       thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
       thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
@@ -242,12 +248,13 @@
       }
       thisWidget.announce();
       thisWidget.input.value = thisWidget.value;
+      console.log(thisWidget.value); // ! to ma być wysyłane do koszyka <3
     }
 
     initActions() {
       const thisWidget = this;
       thisWidget.input.addEventListener('change', function() {
-        thisWidget.setValue(thisWidget.input.value);
+        thisWidget.setValue(thisWidget.value);
       });
       thisWidget.linkDecrease.addEventListener('click', function(event) {
         event.preventDefault();
@@ -271,14 +278,14 @@
   class Cart {
     constructor(element) {
       const thisCart = this;
-      thisCart.products = []; //zawiera produkty dodane do koszyka
+      thisCart.products = [];
       thisCart.getElement(element);
       thisCart.initActions();
       console.log(thisCart);
     }
     getElement(element) {
       const thisCart = this;
-      thisCart.dom = {}; //zawiera referencję el.DOM (czemu to służy?)
+      thisCart.dom = {};
       thisCart.dom.wrapper = element;
       thisCart.dom.toggleTrigger = element.querySelector(select.cart.toggleTrigger);
       thisCart.dom.productList = element.querySelector(select.cart.productList);
@@ -338,6 +345,8 @@
 
   class CartProduct {
     constructor(menuProduct, element) {
+      console.log(menuProduct);
+      console.log(element);
       const thisCartProduct = this;
       thisCartProduct.menuProduct = menuProduct;
       thisCartProduct.id = menuProduct.id;
@@ -395,13 +404,24 @@
   const app = {
     initData: function() {
       const thisApp = this;
-      thisApp.data = dataSource;
+      thisApp.data = {};
+      const url = settings.db.url + '/' + settings.db.products;
+      fetch(url)
+        .then(function(rawResponse) {
+          return rawResponse.json();
+        })
+        .then(function (parsedResponse) {
+          console.log('parsedResponse: ', parsedResponse);
+          thisApp.data.products = parsedResponse;
+          thisApp.initMenu();
+        });
+
+      console.log('thisApp.data:', JSON.stringify(thisApp.data));
     },
     initMenu: function() {
       const thisApp = this;
       for (const productData in thisApp.data.products) {
-        new Product(productData, thisApp.data.products[productData]);
-      }
+        new Product(thisApp.data.products[productData].id, thisApp.data.products[productData]);      }
     },
     initCart: function() {
       const thisApp = this;
@@ -415,7 +435,7 @@
       console.log('settings:', settings);
       console.log('templates:', templates);
       this.initData();
-      this.initMenu();
+      // this.initMenu();
       this.initCart();
     },
   };
