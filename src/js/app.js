@@ -1,0 +1,54 @@
+// const { active } = require("browser-sync");
+import { settings, select, classNames, templates } from './settings.js';
+import Product from './components/Product.js';
+import Cart from './components/Cart.js';
+
+const app = {
+  initData: function() {
+    const thisApp = this;
+    thisApp.data = {};
+    const url = settings.db.url + '/' + settings.db.products;
+    fetch(url)
+      .then(function(rawResponse) {
+        return rawResponse.json();
+      })
+      .then(function (parsedResponse) {
+        console.log('parsedResponse: ', parsedResponse);
+        thisApp.data.products = parsedResponse;
+        thisApp.initMenu();
+      });
+
+    console.log('thisApp.data:', JSON.stringify(thisApp.data));
+  },
+
+  initMenu: function() {
+    const thisApp = this;
+    for (const productData in thisApp.data.products) {
+      new Product(thisApp.data.products[productData].id, thisApp.data.products[productData]);      }
+  },
+
+  initCart: function() {
+    const thisApp = this;
+    const cartElement = document.querySelector(select.containerOf.cart);
+    thisApp.cart = new Cart(cartElement);
+
+    thisApp.productList = document.querySelector(select.containerOf.menu);
+
+    thisApp.productList.addEventListener('add-to-cart', function(event) {
+      app.cart.add(event.detail.product);
+    });
+  },
+
+  init: function(){
+    console.log('*** App starting ***');
+    console.log('thisApp:', this);
+    console.log('classNames:', classNames);
+    console.log('settings:', settings);
+    console.log('templates:', templates);
+    this.initData();
+    // this.initMenu();
+    this.initCart();
+  },
+};
+
+app.init();
