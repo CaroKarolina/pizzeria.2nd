@@ -2,8 +2,53 @@
 import { settings, select, classNames, templates } from './settings.js';
 import Product from './components/Product.js';
 import Cart from './components/Cart.js';
+import Booking from './components/Booking.js';
 
 const app = {
+  inintPages: function() {
+    const thisApp = this;
+
+    thisApp.pages = document.querySelector(select.containerOf.pages).children;
+    thisApp.navLinks = document.querySelectorAll(select.nav.links);
+
+    const idFromHash = window.location.hash.replace('#/', '');
+
+    let pageMatchingHash = thisApp.pages[0].id;
+    for (let page of thisApp.pages) {
+      if (page.id == idFromHash) {
+        pageMatchingHash = page.id;
+        console.log('pageMatchingHash', pageMatchingHash);
+        break;
+      }
+    }
+
+    thisApp.activatePage(pageMatchingHash);
+
+    for (let link of this.navLinks) {
+      link.addEventListener('click', function(event) {
+        const clickedElement = this;
+
+        event.preventDefault();
+        const id = clickedElement.getAttribute('href').replace('#', '');
+        thisApp.activatePage(id);
+
+        window.location.hash = '#/' + id; //coś dziwnego się dieje w localhost
+      });
+    }
+  },
+
+  activatePage: function(pageId) {
+    const thisApp = this;
+
+    for (let page of thisApp.pages) 
+      page.classList.toggle(classNames.pages.active, page.id == pageId);
+
+    for (let link of thisApp.navLinks)
+      link.classList.toggle(
+        classNames.nav.active, 
+        link.getAttribute('href') == '#' + pageId);
+  },
+
   initData: function() {
     const thisApp = this;
     thisApp.data = {};
@@ -39,6 +84,13 @@ const app = {
     });
   },
 
+  initBooking: function() {
+    const thisApp = this;
+    const bookingElement = document.querySelector(select.containerOf.booking);
+    thisApp.booking = new Booking(bookingElement);
+    console.log('booking class', bookingElement);
+  },
+
   init: function(){
     console.log('*** App starting ***');
     console.log('thisApp:', this);
@@ -46,8 +98,10 @@ const app = {
     console.log('settings:', settings);
     console.log('templates:', templates);
     this.initData();
+    this.inintPages();
     // this.initMenu();
     this.initCart();
+    this.initBooking();
   },
 };
 
