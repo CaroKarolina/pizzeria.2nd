@@ -100,9 +100,9 @@ class Product {
     const productSummary = {
       id: (thisProduct.id),
       name: (thisProduct.data.name),
-      amount: (thisProduct.amountWidget.input.value),
+      amount: (thisProduct.amountWidget.value),
       priceSingle: (thisProduct.priceSingle),
-      price: (thisProduct.priceSingle * thisProduct.amountWidget.input.value),
+      price: (thisProduct.priceSingle * thisProduct.amountWidget.value),
       params: (thisProduct.prepareCartProductParams())
     };
     return productSummary;

@@ -1,6 +1,5 @@
-import { select, templates, classNames } from '../settings.js';
+import { select, templates, classNames, settings } from '../settings.js';
 import { utils } from '../utils.js';
-import { settings } from '../settings.js';
 import CartProduct from './CartProduct.js';
 
 class Cart {
@@ -19,19 +18,22 @@ class Cart {
     thisCart.dom.deliveryFee = element.querySelector(select.cart.deliveryFee);
     thisCart.dom.totalNumber = element.querySelector(select.cart.totalNumber);
     thisCart.dom.subtotalPrice = element.querySelector(select.cart.subtotalPrice);
-    thisCart.dom.totalPrice = element.querySelector(select.cart.totalPrice);
+    thisCart.dom.totalPrice = document.querySelectorAll(select.cart.totalPrice);
     thisCart.dom.form = element.querySelector(select.cart.form);
     thisCart.dom.phone = element.querySelector(select.cart.phone);
     thisCart.dom.address = element.querySelector(select.cart.address);
-
+    console.log(thisCart.dom.totalNumber);
   }
   initActions() {
     const thisCart = this;
-    thisCart.dom.productList.addEventListener('updated', function() {
-      thisCart.update();
-    });
-    thisCart.dom.toggleTrigger.addEventListener('click', function() {
+    thisCart.dom.toggleTrigger.addEventListener('click', function(event) {
+      event.preventDefault();
       thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
+    });
+    thisCart.dom.productList.addEventListener('updated', function() {
+      setTimeout(() => {
+        thisCart.update();
+      }, 0);
     });
     thisCart.dom.productList.addEventListener('remove', function() {
       thisCart.remove(event.detail.cartProduct);
@@ -43,6 +45,7 @@ class Cart {
     });
   }
   add(menuProduct) {
+    console.log(menuProduct);
     const thisCart = this;
     const generatedHtml = templates.cartProduct(menuProduct);
     const generatedDOM = utils.createDOMFromHTML(generatedHtml);
@@ -52,23 +55,25 @@ class Cart {
   }
   update() {
     const thisCart = this;
-    const deliveryFee = settings.cart.defaultDeliveryFee;
-    let totalNumber = 0;
-    let subtotalPrice = 0;
+    console.log('apdejt: ', thisCart);
+    thisCart.deliveryFee = settings.cart.defaultDeliveryFee;
+    thisCart.totalNumber = 0;
+    thisCart.subtotalPrice = 0;
     for (let cartProduct of thisCart.products) {
-      totalNumber += cartProduct.amount;
-      subtotalPrice += cartProduct.price;
-      if (subtotalPrice != 0) {
-        thisCart.totalPrice = deliveryFee + subtotalPrice;
+      thisCart.totalPrice = 0;
+      console.log(cartProduct);
+      thisCart.totalNumber += cartProduct.amount;
+      thisCart.subtotalPrice += cartProduct.price;
+      if (thisCart.subtotalPrice != 0) {
+        thisCart.totalPrice = thisCart.deliveryFee + thisCart.subtotalPrice;
       }
     }
-    thisCart.deliveryFee = deliveryFee;
-    thisCart.totalNumber = totalNumber;
-    thisCart.subtotalPrice = subtotalPrice;
-    thisCart.dom.totalNumber.innerHTML = totalNumber;
-    thisCart.dom.deliveryFee.innerHTML = deliveryFee;
-    thisCart.dom.subtotalPrice.innerHTML = subtotalPrice;
-    thisCart.dom.totalPrice.innerHTML = thisCart.totalPrice;
+    thisCart.dom.totalNumber.innerHTML = thisCart.totalNumber;
+    thisCart.dom.deliveryFee.innerHTML = thisCart.deliveryFee;
+    thisCart.dom.subtotalPrice.innerHTML = thisCart.subtotalPrice;
+    for (let totalPrice of thisCart.dom.totalPrice) {
+      totalPrice.innerHTML = thisCart.totalPrice;
+    }
   }
   remove(cartProduct) {
     const thisCart = this;

@@ -7,13 +7,15 @@ class CartProduct {
     thisCartProduct.menuProduct = menuProduct;
     thisCartProduct.id = menuProduct.id;
     thisCartProduct.name = menuProduct.name;
-    thisCartProduct.amount = parseInt(menuProduct.amount);
+    thisCartProduct.amount = menuProduct.amount;
     thisCartProduct.priceSingle = menuProduct.priceSingle;
-    thisCartProduct.amountWidget = menuProduct.amountWidget;
     thisCartProduct.price = menuProduct.price;
+    thisCartProduct.amountWidget = menuProduct.amountWidget;
+
     thisCartProduct.getElement(element);
     thisCartProduct.initAmountWidget();
     thisCartProduct.initActions();
+    console.log(thisCartProduct);
   }
   getElement(element) {
     const thisCartProduct = this;
@@ -26,7 +28,8 @@ class CartProduct {
   }
   initAmountWidget() {
     const thisCartProduct = this;
-    thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidget, thisCartProduct.amount);
+    console.log(thisCartProduct.dom.amountWidget);
+    thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidget);
     thisCartProduct.dom.amountWidget.addEventListener('click', function() {
       thisCartProduct.amount = thisCartProduct.amountWidget.value;
       thisCartProduct.price = thisCartProduct.amount * thisCartProduct.priceSingle;
