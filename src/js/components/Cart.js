@@ -22,7 +22,6 @@ class Cart {
     thisCart.dom.form = element.querySelector(select.cart.form);
     thisCart.dom.phone = element.querySelector(select.cart.phone);
     thisCart.dom.address = element.querySelector(select.cart.address);
-    console.log(thisCart.dom.totalNumber);
   }
   initActions() {
     const thisCart = this;
@@ -108,6 +107,7 @@ class Cart {
     };
       
     fetch(url, options);
+    console.log(options);
   }
 }
 

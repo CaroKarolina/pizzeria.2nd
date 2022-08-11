@@ -57,7 +57,6 @@ const app = {
         return rawResponse.json();
       })
       .then(function (parsedResponse) {
-        console.log('parsedResponse: ', parsedResponse);
         thisApp.data.products = parsedResponse;
         thisApp.initMenu();
       });
@@ -67,8 +66,8 @@ const app = {
 
   initMenu: function() {
     const thisApp = this;
-    for (const productData in thisApp.data.products) {
-      new Product(thisApp.data.products[productData].id, thisApp.data.products[productData]);      }
+    for (const productData in thisApp.data.products)
+      new Product(thisApp.data.products[productData].id, thisApp.data.products[productData]);
   },
 
   initCart: function() {
@@ -87,7 +86,6 @@ const app = {
     const thisApp = this;
     const bookingElement = document.querySelector(select.containerOf.booking);
     thisApp.booking = new Booking(bookingElement);
-    console.log('booking class', bookingElement);
   },
 
   init: function(){
