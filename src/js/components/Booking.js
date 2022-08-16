@@ -11,7 +11,7 @@ class Booking {
     thisBooking.render(element);
     thisBooking.initWidgets();
     thisBooking.getData();
-    thisBooking.chosedTable = ''; //info o wybranym stoliku
+    thisBooking.chosedTable = null; //info o wybranym stoliku
   }
 
   getData() { // pobiera dane z API używając andpointów z parametrami filtrującymi wyniki
@@ -41,7 +41,6 @@ class Booking {
       eventsCurrent: settings.db.url + '/' + settings.db.event + '?' + params.eventsCurrent.join('&'),
       eventsRepeat: settings.db.url + '/' + settings.db.event + '?' + params.eventsRepeat.join('&'),
     }; // obiekt przechowujący endpointy API
-    console.log(urls['booking']);
 
     Promise.all ([
       fetch(urls.booking),
@@ -57,8 +56,6 @@ class Booking {
         eventsRepeatResponse.json(),
       ]);
     }).then(function([bookings, eventsCurrent, eventsRepeat]) {
-      // console.log(bookings);
-      // console.log(eventsCurrent);
       thisBooking.parseData(bookings, eventsCurrent, eventsRepeat);
     });
   }
@@ -84,10 +81,8 @@ class Booking {
     }
 
     for (let item of bookings) {
-      console.log(bookings);
       thisBooking.makeBooked(item.date, item.hour, item.duration, item.table);
     }
-    console.log('thisBooking.booked', thisBooking.booked);
     thisBooking.updateDOM();
   }
 
@@ -173,7 +168,6 @@ class Booking {
     thisBooking.dom.starters = document.querySelectorAll(select.booking.starters);
     thisBooking.dom.phone = thisBooking.dom.wrapper.querySelector(select.booking.phone);
     thisBooking.dom.address = thisBooking.dom.wrapper.querySelector(select.booking.address);
-    console.log(thisBooking.dom.phone);
   }
 
   sendBooking() {
@@ -205,7 +199,6 @@ class Booking {
     };
 
     fetch(url, options);
-    console.log(options);
   }
 
   initWidgets() {
