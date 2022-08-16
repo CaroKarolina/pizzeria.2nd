@@ -1,0 +1,209 @@
+.home-wrapper {
+  margin: ($base-size * 3.5) auto;
+  padding: ($base-size * 6) ($base-size * 4);
+  background: $color-light;
+  border-bottom: 1px solid lighten($color-dark, 70%);
+  border-radius: $radius;
+}
+
+/* Boxex */
+
+.boxes {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.box {
+  text-transform: uppercase;
+  height: 119px;
+  background-color: #000;
+  text-align: center;
+  color: $color-light;
+  font-size: 26px;
+  letter-spacing: -0.65px;
+  font-family: $font-header;
+  padding: 13px 0;
+  margin: 6px;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+
+  &:hover {
+    p {
+      transform: translate(0, -33px);
+      transition: all 1s;
+    }
+  }
+
+  .small {
+    font-size: 14px;
+    font-weight: 300;
+    font-family: $font-text;
+    color: $color-light;
+    text-transform: none;
+    padding: 4px 0 0 0;
+  }
+}
+
+.item_left {
+  flex: 1 1 48%;
+  background: url(/images/assets/pizza-1.jpg) 50%/100% auto no-repeat;
+}
+
+.item_right {
+  flex: 1 1 48%;
+  background: url(/images/assets/pizza-2.jpg) 50%/100% auto no-repeat;
+}
+
+.item_button {
+  flex: 1 1 100%;
+  background-color: #ff6b6b;
+
+  padding: 0;
+  line-height: normal;
+
+  .button__text {
+    text-transform: uppercase;
+    margin: -14px 0 0 0;
+  }
+
+  &:hover {
+    p {
+      transform: translate(0, 0);
+    }
+  }
+}
+
+/* Carousel */
+
+.main-carousel {
+  margin: 102px 0 81px 0;
+}
+
+.carousel-cell {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.slider-image {
+  flex-basis: 210px;
+  padding-left: 5px;
+}
+
+.slider-image img {
+  height: 193px;
+  width: 193px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.slider-text {
+  flex-basis: 370px;
+  height: 57px;
+  margin-left: 40px;
+  font-family: $font-text;
+  font-size: 14px;
+  color: $color-dark;
+}
+
+.slider-text__title {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.slider-text__content {
+  line-height: 1.64;
+}
+
+.slider-text__author {
+  font-style: italic;
+  font-weight: bold;
+}
+
+.flickity-button {
+  color: transparent;
+  background: transparent;
+}
+
+/* Gallery */
+.gallery__rows {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: -8px -8px;
+}
+
+.gallery__image {
+  padding: 5px 5px;
+}
+
+.gallery__image img {
+  height: 193px;
+  width: 193px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.gallery__link {
+  margin: 30px 0 20px 0;
+}
+
+.gallery__link a {
+  font-size: 14px;
+  font-family: $font-text;
+  color: #ff6b6b;
+  line-height: 1.64;
+}
+
+.content {
+  position: relative;
+
+  &:hover .image {
+    opacity: 0.7;
+  }
+
+  &:hover .gallery__image-ico {
+    opacity: 1;
+    transition: opacity 0.9s ease;
+  }
+
+  .gallery__image-ico {
+    position: absolute;
+    font-size: 28px;
+    padding-top: 75px;
+    padding-left: 65px;
+    border-radius: 4px;
+    top: 0;
+    opacity: 0;
+    color: $color-light;
+  }
+
+  .fas:hover {
+    transition: all 1s;
+    color: $color-danger;
+  }
+}
+
+/* Media */
+@media screen and (max-width: 690px) {
+  .gallery__rows {
+    justify-content: center;
+
+    .gallery__image img {
+      height: 250px;
+      width: 250px;
+    }
+  }
+
+  .content {
+    .gallery__image-ico {
+      font-size: 34px;
+      padding-top: 95px;
+      padding-left: 95px;
+    }
+  }
+
+  .gallery__link {
+    text-align: center;
+  }
+}

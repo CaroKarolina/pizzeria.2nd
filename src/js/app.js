@@ -3,6 +3,7 @@ import { settings, select, classNames, templates } from './settings.js';
 import Product from './components/Product.js';
 import Cart from './components/Cart.js';
 import Booking from './components/Booking.js';
+import Home from './components/Home.js';
 
 const app = {
   inintPages: function() {
@@ -88,6 +89,12 @@ const app = {
     thisApp.booking = new Booking(bookingElement);
   },
 
+  initHome: function() {
+    const thisApp = this;
+    const homeWrapper = document.querySelector(select.containerOf.home);
+    thisApp.home = new Home(homeWrapper);
+  },
+
   init: function(){
     console.log('*** App starting ***');
     console.log('thisApp:', this);
@@ -99,6 +106,7 @@ const app = {
     // this.initMenu();
     this.initCart();
     this.initBooking();
+    this.initHome();
   },
 };
 
