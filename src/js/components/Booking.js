@@ -7,7 +7,7 @@ import HourPicker from './HourPicker.js';
 class Booking {
   constructor(element) {
     const thisBooking = this;
-    thisBooking.element = element; // czy to zapisywać czy nie ? 
+    thisBooking.element = element; // czy to zapisywać czy nie ?
     thisBooking.render(element);
     thisBooking.initWidgets();
     thisBooking.getData();
@@ -102,11 +102,24 @@ class Booking {
     }
   }
 
+  clearAllActiveTables() {
+    const thisBooking = this;
+
+    for (let table of thisBooking.dom.tables) {
+      if (table.classList.contains(classNames.booking.tableSelected))
+        table.classList.remove(classNames.booking.tableSelected);
+    }
+  }
+
   updateDOM() {
     const thisBooking = this;
 
     thisBooking.date = thisBooking.datePicker.value; //bieżąca data z datePickera
     thisBooking.hour = utils.hourToNumber(thisBooking.hourPicker.value);
+    console.log(thisBooking.chosedTable);
+    thisBooking.chosedTable = null;
+    thisBooking.clearAllActiveTables();
+    console.log(thisBooking.chosedTable);
 
     let allAvailable = false; // wszystkie stoliki są dostępne = fałsz
     if (
@@ -143,11 +156,13 @@ class Booking {
         alert('Wybrany stolik jest już zajęty, proszę, wybierz inny :)');
       } else {
         thisBooking.chosedTable = dataTable;
-        for (let table of thisBooking.dom.tables) {
-          if (table.classList.contains(classNames.booking.tableSelected))
-            table.classList.remove(classNames.booking.tableSelected);
-        }
+        thisBooking.clearAllActiveTables();
+        // for (let table of thisBooking.dom.tables) {
+        //   if (table.classList.contains(classNames.booking.tableSelected))
+        //     table.classList.remove(classNames.booking.tableSelected);
+        // }
         clickedElement.classList.add(classNames.booking.tableSelected);
+        console.log(clickedElement);
       }
     }
   }
@@ -164,7 +179,7 @@ class Booking {
     thisBooking.dom.hourPicker = thisBooking.dom.wrapper.querySelector(select.widgets.hourPicker.wrapper);
     thisBooking.dom.datePicker = thisBooking.dom.wrapper.querySelector(select.widgets.datePicker.wrapper);
     thisBooking.dom.tables = thisBooking.dom.wrapper.querySelectorAll(select.booking.tables);
-    thisBooking.dom.floorPlan = thisBooking.dom.wrapper.querySelector(select.booking.floorPlan);    
+    thisBooking.dom.floorPlan = thisBooking.dom.wrapper.querySelector(select.booking.floorPlan);
     thisBooking.dom.starters = document.querySelectorAll(select.booking.starters);
     thisBooking.dom.phone = thisBooking.dom.wrapper.querySelector(select.booking.phone);
     thisBooking.dom.address = thisBooking.dom.wrapper.querySelector(select.booking.address);
