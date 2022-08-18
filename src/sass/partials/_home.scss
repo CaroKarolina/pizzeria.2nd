@@ -6,7 +6,7 @@
   border-radius: $radius;
 }
 
-/* Boxex */
+// Boxex
 
 .boxes {
   display: flex;
@@ -74,7 +74,7 @@
   }
 }
 
-/* Carousel */
+// Carousel
 
 .main-carousel {
   margin: 102px 0 81px 0;
@@ -125,7 +125,8 @@
   background: transparent;
 }
 
-/* Gallery */
+// Gallery
+
 .gallery__rows {
   display: flex;
   flex-wrap: wrap;
@@ -184,7 +185,8 @@
   }
 }
 
-/* Media */
+// Media
+
 @media screen and (max-width: 690px) {
   .gallery__rows {
     justify-content: center;
